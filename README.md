@@ -25,10 +25,12 @@ A docker compose file is provided to make it simple to run both the agent and th
 
 ```console
 # Start the app and agent containers using docker-compose
-$ docker-compose up -d
+$ env DD_API_KEY=XXX docker-compose up -d
 # Attach and follow to the app container
 $ docker-compose logs -f app
 ```
+
+You can also pass custom tags with DD_TAGS and a custom service name with DD_SERVICE. 
 
 ### Using your existing Datadog agent
 
