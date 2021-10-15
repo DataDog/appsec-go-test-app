@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      target: alpine
+    environment:
+      DD_AGENT_HOST: agent
+      DD_SERVICE: ${DD_SERVICE:-go-test-app}
+      DD_TAGS: ${DD_TAGS}
+    ports:
+      - 7777:7777
+  agent:
+    image: datadog/agent:7.31.0
+    environment:
+      DD_API_KEY: ${DD_API_KEY}
