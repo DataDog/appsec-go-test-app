@@ -14,5 +14,5 @@ require (
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/DataDog/dd-trace-go.v1 v1.33.1-0.20211015084330-6a3c50f2607c
+	gopkg.in/DataDog/dd-trace-go.v1 v1.34.0-rc.3
 )

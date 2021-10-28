@@ -8,6 +8,7 @@ services:
       DD_AGENT_HOST: agent
       DD_SERVICE: ${DD_SERVICE:-go-test-app}
       DD_TAGS: ${DD_TAGS}
+      DD_ENV: ${DD_ENV:-testing}
     ports:
       - 7777:7777
   agent:

@@ -4,7 +4,7 @@ RUN apt update && apt install -y jq
 
 WORKDIR /app
 COPY . .
-RUN COMMIT=$(curl -s 'https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=v1' | jq -r .[0].sha) && go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .
+# RUN COMMIT=$(curl -s 'https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=v1' | jq -r .[0].sha) && go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .
 
 RUN go build -v -tags appsec .
 
