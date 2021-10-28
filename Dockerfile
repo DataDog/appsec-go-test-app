@@ -1,4 +1,4 @@
-FROM golang:1 AS build
+FROM golang:1 AS build-env
 
 RUN apt update && apt install -y jq
 
@@ -6,6 +6,13 @@ WORKDIR /app
 COPY . .
 # RUN COMMIT=$(curl -s 'https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=v1' | jq -r .[0].sha) && go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .
 
+
+FROM build-env AS build
+RUN go build -v -tags appsec .
+
+
+FROM build-env AS build-vendoring
+RUN go mod vendor
 RUN go build -v -tags appsec .
 
 
