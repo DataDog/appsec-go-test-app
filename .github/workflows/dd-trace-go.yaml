@@ -62,6 +62,7 @@ jobs:
       # Install gcc and the libc headers on alpine images
       - if: ${{ matrix.distribution == 'alpine' }}
         run: apk add gcc musl-dev libc6-compat git
+      - run: go get -d -t ./internal/appsec/...
       - run: env GODEBUG="cgocheck=2" CGO_ENABLED=${{ matrix.cgo_enabled }} DD_APPSEC_ENABLED=${{ matrix.appsec_enabled }} go test -tags "${{ matrix.build_tags }}" ./internal/appsec/...
 
   # debian stretch doesn't have the latest go versions
