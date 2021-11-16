@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: Julio-Guerra-patch-1
+          ref: e4e67ce5816c2030729bd391db2ca8488ea1f037
       - name: Setup go
         uses: actions/setup-go@v2
         with:
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: Julio-Guerra-patch-1
+          ref: e4e67ce5816c2030729bd391db2ca8488ea1f037
       # Install gcc and the libc headers on alpine images
       - if: ${{ matrix.distribution == 'alpine' }}
         run: apk add gcc musl-dev libc6-compat git
@@ -86,6 +86,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: Julio-Guerra-patch-1
+          ref: e4e67ce5816c2030729bd391db2ca8488ea1f037
       - run: go get -v -d -t ./internal/appsec/...
       - run: env GODEBUG="cgocheck=2" CGO_ENABLED=${{ matrix.cgo_enabled }} DD_APPSEC_ENABLED=${{ matrix.appsec_enabled }} go test -mod=mod -v -tags "${{ matrix.build_tags }}" ./internal/appsec/...
