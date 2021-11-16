@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         runs-on: [ macos-latest, ubuntu-latest, windows-latest ]
-        go-version: [ 1, 1.17, 1.16, 1.15, 1.14, 1.13 ]
+        go-version: [ 1, 1.17, 1.16, 1.15, 1.14 ]
         cgo_enabled:
           - 0 # test it compiles when cgo is disabled
           - 1
@@ -38,7 +38,7 @@ jobs:
   golang-linux-container:
     strategy:
       matrix:
-        go-version: [ 1, 1.17, 1.16, 1.15, 1.14, 1.13 ]
+        go-version: [ 1, 1.17, 1.16, 1.15, 1.14 ]
         distribution: [ buster, alpine ]
         cgo_enabled:
           - 0 # test it compiles when cgo is disabled
@@ -68,7 +68,7 @@ jobs:
   golang-debian-stretch-container:
     strategy:
       matrix:
-        go-version: [ 1.14, 1.13 ]
+        go-version: [ 1.14 ]
         cgo_enabled:
           - 0 # test it compiles when cgo is disabled
           - 1
