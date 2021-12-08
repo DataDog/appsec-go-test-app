@@ -4,7 +4,11 @@ RUN apt update && apt install -y jq
 
 WORKDIR /app
 COPY . .
-# RUN COMMIT=$(curl -s 'https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=v1' | jq -r .[0].sha) && go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .
+
+ARG branch=v1
+RUN set -eux && \
+    COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$branch" | jq -r .[0].sha) && \
+  go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .
 
 
 FROM build-env AS build
