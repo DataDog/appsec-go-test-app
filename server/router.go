@@ -15,9 +15,9 @@ import (
 	"path/filepath"
 
 	"github.com/gorilla/mux"
-
-	"github.com/Datadog/appsec-go-test-app/vulnerable"
 	muxtrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gorilla/mux"
+
+	"go-test-app/vulnerable"
 )
 
 func NewRouter(templateDir string) *muxtrace.Router {

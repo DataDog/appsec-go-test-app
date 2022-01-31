@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Datadog/appsec-go-test-app/vulnerable"
 	"github.com/stretchr/testify/require"
+
+	"go-test-app/vulnerable"
 )
 
 func TestShellInjection(t *testing.T) {

@@ -8,8 +8,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/sqreen/go-dvwa/vulnerable"
 	"github.com/stretchr/testify/require"
+
+	"go-test-app/vulnerable"
 )
 
 func TestLocalFileInclusion(t *testing.T) {

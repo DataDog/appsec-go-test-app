@@ -4,8 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/sqreen/go-dvwa/vulnerable"
 	"github.com/stretchr/testify/require"
+
+	"go-test-app/vulnerable"
 )
 
 func TestGetProducts(t *testing.T) {
