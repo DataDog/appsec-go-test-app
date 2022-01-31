@@ -1,19 +1,19 @@
 version: "3.9"
 services:
-  app:
-    build:
-      context: .
-      target: alpine
-    environment:
-      DD_AGENT_HOST: agent
-      DD_SERVICE: ${DD_SERVICE:-go-test-app}
-      DD_TAGS: ${DD_TAGS}
-      DD_ENV: ${DD_ENV:-testing}
-      DD_APPSEC_RULES: ${DD_APPSEC_RULES}
-    ports:
-      - 7777:7777
-  agent:
-    image: datadog/agent:7
-    environment:
-      DD_API_KEY: ${DD_API_KEY}
-      DD_SITE: ${DD_SITE}
+    app:
+        build:
+            context: .
+            target: debian
+        environment:
+            DD_AGENT_HOST: agent
+            DD_SERVICE: ${DD_SERVICE:-dvwa}
+            DD_TAGS: ${DD_TAGS}
+            DD_ENV: ${DD_ENV:-testing}
+        ports:
+            - 8080:8080
+    agent:
+        image: datadog/agent:7.33.0-rc.11
+        environment:
+            DD_API_KEY: ${DD_API_KEY}
+            DD_SITE: ${DD_SITE}
+            DD_HOSTNAME: appsec-go-dvwa
