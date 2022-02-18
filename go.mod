@@ -2,7 +2,7 @@ module go-test-app
 
 go 1.17
 
-require gopkg.in/DataDog/dd-trace-go.v1 v1.36.0-rc.2
+require gopkg.in/DataDog/dd-trace-go.v1 v1.36.0
 
 require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.0.0-20211129110424-6491aa3bf583 // indirect
