@@ -2,6 +2,11 @@ name: dd-trace-go
 on:
   push:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'git repository ref'
+        required: true
+        default: 'v1'
   schedule:
     - cron: "0 0 * * *"
 jobs:
@@ -25,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: v1
+          ref: "${{ github.event.inputs.logLevel }}"
       - name: Setup go
         uses: actions/setup-go@v2
         with:
@@ -57,7 +62,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: v1
+          ref: "${{ github.event.inputs.logLevel }}"
       # Install gcc and the libc headers on alpine images
       - if: ${{ matrix.distribution == 'alpine' }}
         run: apk add gcc musl-dev libc6-compat git
@@ -86,6 +91,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: DataDog/dd-trace-go
-          ref: v1
+          ref: "${{ github.event.inputs.logLevel }}"
       - run: go get -v -d -t ./internal/appsec/... ./contrib/google.golang.org/grpc/... ./contrib/gorilla/mux/... ./contrib/labstack/... ./contrib/go-chi/... ./contrib/net/http/...
       - run: env GODEBUG="cgocheck=2" CGO_ENABLED=${{ matrix.cgo_enabled }} DD_APPSEC_ENABLED=${{ matrix.appsec_enabled }} go test -mod=mod -v -tags "${{ matrix.build_tags }}" ./internal/appsec/... ./contrib/google.golang.org/grpc/... ./contrib/gorilla/mux/... ./contrib/labstack/... ./contrib/go-chi/... ./contrib/net/http/...
