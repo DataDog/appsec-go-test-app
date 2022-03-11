@@ -5,13 +5,13 @@
 ### Debian
 
 ```console
-$ docker build --target=debian -t go-test-app https://github.com/Julio-Guerra/go-test-app.git
+$ docker build --target=debian -t go-dvwa https://github.com/DataDog/go-test-app.git
 ```
 
 ## Alpine
 
 ```console
-$ docker build --target=alpine https://github.com/Julio-Guerra/go-test-app.git
+$ docker build --target=alpine https://github.com/Julio-Guerra/go-dvwa.git
 ```
 
 ## Running it
@@ -40,7 +40,7 @@ operating-system. The only way you can make the container access the agent is
 running it with the networking mode called "host".
 
 ```console
-$ docker run --network=host -it -p 7777:7777 --rm go-test-app
+$ docker run --network=host -it -p 7777:7777 --rm go-dvwa
 ```
 
 ## Attacking the app

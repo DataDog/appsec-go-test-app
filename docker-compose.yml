@@ -6,7 +6,7 @@ services:
       target: alpine
     environment:
       DD_AGENT_HOST: agent
-      DD_SERVICE: ${DD_SERVICE:-go-test-app}
+      DD_SERVICE: ${DD_SERVICE:-go-dvwa}
       DD_TAGS: ${DD_TAGS}
       DD_ENV: ${DD_ENV:-testing}
       DD_APPSEC_RULES: ${DD_APPSEC_RULES}
