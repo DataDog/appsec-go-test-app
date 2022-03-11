@@ -100,6 +100,23 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		})
 	})
 
+	// /api/product allows to manage the list of product catalog
+	r.PathPrefix("/api/catalog/").Methods("PUT").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		//ctx := r.Context()
+		//uid := r.Header.Get("x-api-user-id")
+		//if span, ok := tracer.SpanFromContext(ctx); ok {
+		//	tracer.SetUser(span, uid)
+		//}
+		//var payload interface{}
+		//if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		//	http.Error(w, err.Error(), http.StatusInternalServerError)
+		//	return
+		//}
+		//appsec.MonitorParsedHTTPBody(ctx, payload)
+		//w.Header().Set("Content-Type", "application/json")
+		//io.WriteString(w, `{"status":"ok"}`)
+	})
+
 	r.PathPrefix("/").Handler(http.FileServer(http.FS(templateFS)))
 
 	return r
