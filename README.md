@@ -11,7 +11,7 @@ $ docker build --target=debian -t go-dvwa https://github.com/DataDog/go-test-app
 ## Alpine
 
 ```console
-$ docker build --target=alpine https://github.com/Julio-Guerra/go-dvwa.git
+$ docker build --target=alpine https://github.com/DataDog/go-test-app.git
 ```
 
 ## Running it
