@@ -7,7 +7,7 @@
 FROM golang AS build
 WORKDIR /app
 COPY . .
-RUN go build -v -o go-dvwa . # note that CGO is enabled by default here
+RUN go build -v -tags appsec -o go-dvwa . # note that CGO is enabled by default here
 
 #
 # Final alpine stage copying the go-dvwa program compiled in the previous

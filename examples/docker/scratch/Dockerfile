@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # 1. Compile the program
-RUN go build -v -o go-dvwa . # note that CGO is enabled by default here
+RUN go build -v -tags appsec -o go-dvwa . # note that CGO is enabled by default here
 
 # 2. Prepare a directory with the shared libraries required by the compiled
 # program file using ldd:
