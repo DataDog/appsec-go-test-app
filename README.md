@@ -6,10 +6,18 @@ We use vault to retrieve the API and remote configuration keys for the AppSec Te
 The first step is to create those keys if you don't have them yet (make sure your are on the right org):
 - https://app.datadoghq.com/organization-settings/api-keys
 - https://app.datadoghq.com/organization-settings/remote-config
+
 You will need to register those keys as vault secrets [here](https://vault.us1.prod.dog/ui/vault/secrets/applications/list/datadog-agent/shared/).
 You need to add:
-- agent\_api\_key\_appsec\_test\_org (value: <your API key>)
-- agent\_remote\_config\_key\_appsec\_test\_org (value: <your RC key>)
+- agent\_api\_key\_appsec\_test\_org (value: \<your API key\>)
+- agent\_remote\_config\_key\_appsec\_test\_org (value: \<your RC key\>)
+
+Alternately, if you don't want add the keys to vault you can simply override the env vars in `env.sh`
+
+![vault1](https://user-images.githubusercontent.com/19765952/206447673-04aba703-d6c3-4804-9bb8-6367831f7020.png)
+
+![vault2](https://user-images.githubusercontent.com/19765952/206447761-dd1cd492-34b5-45e6-b419-58aba6001337.png)
+
 
 ## Building the docker image
 
