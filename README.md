@@ -1,5 +1,16 @@
 # Usage
 
+## Vault setup
+
+We use vault to retrieve the API and remote configuration keys for the AppSec Test Org.
+The first step is to create those keys if you don't have them yet (make sure your are on the right org):
+- https://app.datadoghq.com/organization-settings/api-keys
+- https://app.datadoghq.com/organization-settings/remote-config
+You will need to register those keys as vault secrets [here](https://vault.us1.prod.dog/ui/vault/secrets/applications/list/datadog-agent/shared/).
+You need to add:
+- agent\_api\_key\_appsec\_test\_org (value: <your API key>)
+- agent\_remote\_config\_key\_appsec\_test\_org (value: <your RC key>)
+
 ## Building the docker image
 
 ### Debian
@@ -24,24 +35,16 @@ A docker compose file is provided to make it simple to run both the agent and
 the Go test app.
 
 ```console
+# Source the testing environment
+$ source env.sh
 # Start the app and agent containers using docker-compose
-$ env DD_API_KEY=XXX docker-compose up -d
+$ docker-compose up -d
 # Attach and follow to the app container
 $ docker-compose logs -f app
 ```
 
 You can also pass custom tags with DD_TAGS and a custom service name with
 DD_SERVICE.
-
-### Using your existing Datadog agent
-
-You have the standard Datadog agent installed and running on your
-operating-system. The only way you can make the container access the agent is
-running it with the networking mode called "host".
-
-```console
-$ docker run --network=host -it -p 7777:7777 --rm go-dvwa
-```
 
 ## Attacking the app
 
@@ -58,3 +61,5 @@ For example:
    ```console
    curl -v  'http://127.0.0.1:7777/sql?k=select%20*%20from%20users%20where%201%3D1%20union%20select%20*%20from%20cb'
    ```
+
+Note: you can forge the ip you want by adding `-H "X-Forwarded-For: <any_ip>"` to your curl command
