@@ -12,8 +12,13 @@ services:
       DD_APPSEC_RULES: ${DD_APPSEC_RULES}
     ports:
       - 7777:7777
+
   agent:
     image: datadog/agent:7.39.1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
     environment:
       DD_API_KEY: ${DD_API_KEY}
       DD_SITE: ${DD_SITE}

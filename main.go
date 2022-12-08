@@ -20,6 +20,7 @@ import (
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec"
 	muxtrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gorilla/mux"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
+	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
 
 //go:embed template
@@ -28,6 +29,9 @@ var contentFS embed.FS
 func main() {
 	tracer.Start()
 	defer tracer.Stop()
+
+	profiler.Start()
+	defer profiler.Stop()
 
 	templateFS, err := fs.Sub(contentFS, "template")
 	if err != nil {
