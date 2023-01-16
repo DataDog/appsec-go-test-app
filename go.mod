@@ -14,6 +14,7 @@ require (
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.42.0-rc.1 // indirect
 	github.com/DataDog/datadog-go v4.8.2+incompatible // indirect
 	github.com/DataDog/datadog-go/v5 v5.0.2 // indirect
+	github.com/DataDog/go-tuf v0.3.0--fix-localmeta-fork // indirect
 	github.com/DataDog/gostackparse v0.5.0 // indirect
 	github.com/DataDog/sketches-go v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.5.1 // indirect
@@ -36,7 +37,6 @@ require (
 	github.com/richardartoul/molecule v1.0.1-0.20221107223329-32cfee06a052 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.4.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/theupdateframework/go-tuf v0.3.0 // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
 	go4.org/intern v0.0.0-20211027215823-ae77deb06f29 // indirect
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20220617031537-928513b29760 // indirect
