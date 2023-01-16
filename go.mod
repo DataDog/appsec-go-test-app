@@ -4,14 +4,14 @@ go 1.17
 
 require (
 	github.com/gorilla/mux v1.8.0
-	github.com/stretchr/testify v1.8.0
-	gopkg.in/DataDog/dd-trace-go.v1 v1.39.0-alpha.1.0.20221208163054-e4379bab7113
+	github.com/stretchr/testify v1.8.1
+	gopkg.in/DataDog/dd-trace-go.v1 v1.45.1
 	modernc.org/ql v1.4.1
 )
 
 require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.0.0-20211129110424-6491aa3bf583 // indirect
-	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.41.0-rc.3.0.20221117072328-527a422278da // indirect
+	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.42.0-rc.1 // indirect
 	github.com/DataDog/datadog-go v4.8.2+incompatible // indirect
 	github.com/DataDog/datadog-go/v5 v5.0.2 // indirect
 	github.com/DataDog/gostackparse v0.5.0 // indirect
