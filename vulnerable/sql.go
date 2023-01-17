@@ -7,7 +7,7 @@ import (
 	"log"
 	"math/rand"
 
-	_ "modernc.org/ql/driver"
+	_ "github.com/glebarez/go-sqlite"
 
 	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
 )
@@ -29,14 +29,14 @@ CREATE TABLE product (
 
 func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 	// Hack to get the driver pointer through db.Driver() since it is not exposed
-	db, err := sql.Open("ql", "memory://mem.db")
+	db, err := sql.Open("sqlite", ":memory:")
 	if err != nil {
 		log.Fatalln("unexpected sql.Open error:", err)
 	}
-	sqltrace.Register("ql", db.Driver())
+	sqltrace.Register("sqlite", db.Driver())
 	db.Close()
 
-	db, err = sqltrace.Open("ql", "memory://mem.db")
+	db, err = sqltrace.Open("sqlite", ":memory:")
 	if err != nil {
 		log.Fatalln("unexpected sql.Open error:", err)
 	}
