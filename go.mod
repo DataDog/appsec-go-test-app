@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.1
-	gopkg.in/DataDog/dd-trace-go.v1 v1.39.0-alpha.1.0.20230209081356-7b05964708b9
+	gopkg.in/DataDog/dd-trace-go.v1 v1.39.0-alpha.1.0.20230209111023-1d8e719fa322
 )
 
 require (

@@ -76,18 +76,21 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 
 	r := muxtrace.NewRouter()
 
-	r.HandleFunc("/setuser", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html")
-		s := sessionFromRequest(r)
-		if s == nil || !s.active() {
-			http.Redirect(w, r, "/login.html", http.StatusFound)
+	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+		if s := sessionFromRequest(r); s != nil && s.active() {
+			http.Redirect(w, r, "/auth", http.StatusFound)
 			return
 		}
-		if err := appsec.SetUser(r.Context(), s.username); err != nil {
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		if username == "" || password == "" {
+			w.Write([]byte("Username and password can't be empty"))
+			w.Write([]byte("<br/><a href='/registration.html'>Registration form</a>."))
+			w.Write([]byte("<br/><a href='/'>Home</a>."))
 			return
 		}
-		w.Write([]byte("Congrats, you are a legit user and we love you for that <3."))
-		w.Write([]byte("<br/><a href='/'>Home page.</a>"))
+		vulnerable.AddUser(r.Context(), db, username, password)
+		http.Redirect(w, r, "/login.html", http.StatusFound)
 	})
 
 	r.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -102,14 +105,17 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		// and user login is always considered successful.
 		user, err := vulnerable.GetUser(r.Context(), db, username)
 		if err != nil || user.Password != password {
+			appsec.TrackUserLoginFailureEvent(r.Context(), username, user != nil, map[string]string{})
 			http.Redirect(w, r, "/auth", http.StatusFound)
 			return
 		}
-		appsec.TrackUserLoginSuccessEvent(r.Context(), username, map[string]string{}, tracer.WithUserName(username))
+		if appsec.TrackUserLoginSuccessEvent(r.Context(), username, map[string]string{}, tracer.WithUserName(username)) != nil {
+			return
+		}
 		token := uuid.NewString()
 		s := session{
 			username: username,
-			expiry:   time.Now().Add(5 * time.Minute),
+			expiry:   time.Now().Add(120 * time.Minute),
 			token:    token,
 		}
 		sessions[token] = s
@@ -136,9 +142,12 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	r.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		if s := sessionFromRequest(r); s != nil && s.active() {
-			w.Write([]byte("Successfully logged in as " + s.username + "."))
-			w.Write([]byte("<br/><a href='/setuser'>Verify user</a> (blocking test)."))
-			w.Write([]byte("<br/><a href='/logout'>Logout</a>."))
+			if appsec.SetUser(r.Context(), s.username) != nil {
+				return
+			}
+			w.Write([]byte("Successfully logged in as <b>" + s.username + "</b>."))
+			w.Write([]byte("<br/>Now try blocking the user in the dashboard and refreshing this page."))
+			w.Write([]byte("<br/><br/><a href='/logout'>Logout</a>."))
 		} else {
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte("Couldn't log in (user probably doesn't exist)."))

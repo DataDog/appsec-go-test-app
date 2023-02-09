@@ -113,3 +113,7 @@ func GetUser(ctx context.Context, db *sql.DB, username string) (*User, error) {
 	}
 	return nil, errors.New("Could not find user " + username)
 }
+
+func AddUser(ctx context.Context, db *sql.DB, username string, password string) {
+	db.ExecContext(ctx, "INSERT INTO user (name, email, password) VALUES (?, ?, ?)", username, username+"@"+"bogus.com", password)
+}
