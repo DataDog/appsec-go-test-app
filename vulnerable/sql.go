@@ -3,6 +3,7 @@ package vulnerable
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"math/rand"
@@ -48,9 +49,9 @@ func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 	for i := 0; i < nbEntries; i++ {
 		_, err := db.Exec(
 			"INSERT INTO user (name, email, password) VALUES (?, ?, ?)",
-			fmt.Sprintf("User %d", i),
+			fmt.Sprintf("User#%d", i),
 			fmt.Sprintf("user%d@mail.com", i),
-			fmt.Sprintf("secret password %d", i))
+			fmt.Sprintf("secret-password#%d", i))
 		if err != nil {
 			return nil, err
 		}
@@ -68,12 +69,17 @@ func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 	return db, nil
 }
 
-type Product struct {
-	Id       int
-	Name     string
-	Category string
-	Price    string
-}
+type (
+	Product struct {
+		Id       int
+		Name     string
+		Category string
+		Price    string
+	}
+	User struct {
+		Name, Password, Email string
+	}
+)
 
 func GetProducts(ctx context.Context, db *sql.DB, category string) ([]Product, error) {
 	rows, err := db.QueryContext(ctx, "SELECT * FROM product WHERE category='"+category+"'")
@@ -90,4 +96,20 @@ func GetProducts(ctx context.Context, db *sql.DB, category string) ([]Product, e
 		products = append(products, product)
 	}
 	return products, nil
+}
+
+func GetUser(ctx context.Context, db *sql.DB, username string) (*User, error) {
+	rows, err := db.QueryContext(ctx, "SELECT name, email, password FROM user WHERE name='"+username+"'")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	if rows.Next() {
+		var user User
+		if err := rows.Scan(&user.Name, &user.Email, &user.Password); err != nil {
+			return nil, err
+		}
+		return &user, nil
+	}
+	return nil, errors.New("Could not find user " + username)
 }

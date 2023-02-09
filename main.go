@@ -8,11 +8,13 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"github.com/google/uuid"
 	"html/template"
 	"io"
 	"io/fs"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"go-dvwa/vulnerable"
@@ -25,6 +27,21 @@ import (
 
 //go:embed template
 var contentFS embed.FS
+var sessions = make(map[string]session)
+
+type session struct {
+	username string
+	expiry   time.Time
+	token    string
+}
+
+func (s *session) active() bool {
+	return s.expiry.After(time.Now())
+}
+
+func (s *session) terminate() {
+	delete(sessions, s.token)
+}
 
 func main() {
 	tracer.Start()
@@ -58,6 +75,78 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	}
 
 	r := muxtrace.NewRouter()
+
+	r.HandleFunc("/setuser", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		s := sessionFromRequest(r)
+		if s == nil || !s.active() {
+			http.Redirect(w, r, "/login.html", http.StatusFound)
+			return
+		}
+		if err := appsec.SetUser(r.Context(), s.username); err != nil {
+			return
+		}
+		w.Write([]byte("Congrats, you are a legit user and we love you for that <3."))
+		w.Write([]byte("<br/><a href='/'>Home page.</a>"))
+	})
+
+	r.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		if s := sessionFromRequest(r); s != nil && s.active() {
+			http.Redirect(w, r, "/auth", http.StatusFound)
+			return
+		}
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		//TODO: add user credential check (backed by db)
+		// This endpoint currently only tests the appsec.SetUser SDK, no check is made on credentials
+		// and user login is always considered successful.
+		user, err := vulnerable.GetUser(r.Context(), db, username)
+		if err != nil || user.Password != password {
+			http.Redirect(w, r, "/auth", http.StatusFound)
+			return
+		}
+		appsec.TrackUserLoginSuccessEvent(r.Context(), username, map[string]string{}, tracer.WithUserName(username))
+		token := uuid.NewString()
+		s := session{
+			username: username,
+			expiry:   time.Now().Add(5 * time.Minute),
+			token:    token,
+		}
+		sessions[token] = s
+		http.SetCookie(w, &http.Cookie{
+			Name:    "session-token",
+			Value:   token,
+			Expires: s.expiry,
+		})
+		http.Redirect(w, r, "/auth", http.StatusFound)
+	})
+
+	r.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		if s := sessionFromRequest(r); s != nil && s.active() {
+			s.terminate()
+			r.AddCookie(&http.Cookie{
+				Name:    "session-token",
+				Value:   "",
+				Expires: time.Unix(0, 0),
+			})
+		}
+		http.Redirect(w, r, "/", http.StatusFound)
+	})
+
+	r.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		if s := sessionFromRequest(r); s != nil && s.active() {
+			w.Write([]byte("Successfully logged in as " + s.username + "."))
+			w.Write([]byte("<br/><a href='/setuser'>Verify user</a> (blocking test)."))
+			w.Write([]byte("<br/><a href='/logout'>Logout</a>."))
+		} else {
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte("Couldn't log in (user probably doesn't exist)."))
+			w.Write([]byte("<br/><a href='/login.html'>Login form</a>."))
+		}
+
+		w.Write([]byte("<br/><a href='/'>Home page.</a>"))
+	})
 
 	// /products vulnerable to SQL injections
 	r.HandleFunc("/products", func(w http.ResponseWriter, r *http.Request) {
@@ -126,4 +215,19 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	r.PathPrefix("/").Handler(http.FileServer(http.FS(templateFS)))
 
 	return r
+}
+
+func sessionFromRequest(r *http.Request) *session {
+	if c, err := r.Cookie("session-token"); err == nil {
+		if s, ok := sessions[c.Value]; ok {
+			return &s
+		} else {
+			r.AddCookie(&http.Cookie{
+				Name:    "session-token",
+				Value:   "",
+				Expires: time.Unix(0, 0),
+			})
+		}
+	}
+	return nil
 }
