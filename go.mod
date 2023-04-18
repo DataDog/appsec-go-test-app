@@ -1,4 +1,4 @@
-module github.com/DataDog/appsec-go-test-app
+module go-dvwa
 
 go 1.18
 
