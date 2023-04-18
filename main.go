@@ -8,7 +8,6 @@ package main
 import (
 	"embed"
 	"encoding/json"
-	"github.com/google/uuid"
 	"html/template"
 	"io"
 	"io/fs"
@@ -16,7 +15,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+
 	"go-dvwa/vulnerable"
 
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec"
@@ -217,6 +218,27 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 			return
 		}
 		appsec.MonitorParsedHTTPBody(ctx, payload)
+		w.Header().Set("Content-Type", "application/json")
+		io.WriteString(w, `{"status":"ok"}`)
+	})
+
+	// /test api to test some extra behaviours during the QA of dd-trace-go
+	r.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+		var payload struct {
+			Tracer bool `json:"tracer"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		switch {
+		case payload.Tracer:
+			tracer.Start()
+		case !payload.Tracer:
+			tracer.Stop()
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		io.WriteString(w, `{"status":"ok"}`)
 	})
