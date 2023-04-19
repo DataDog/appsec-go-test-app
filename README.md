@@ -46,9 +46,19 @@ For example:
    curl -v --path-as-is 'http://127.0.0.1:7777/../../../etc/passwd'
    ```
 
-3. Targeted SQLi attempt:
+2. SQLi attempt:
    ```console
    curl -v  'http://127.0.0.1:7777/sql?k=select%20*%20from%20users%20where%201%3D1%20union%20select%20*%20from%20cb'
+   ```
+
+3. SQLi vulnerability:
+   ```console
+   curl -v  'http://localhost:7777/products?category=%27%20union%20select%20*%20from%20user%20%27'
+   ```
+
+3. Attack attempt through the HTTP body:
+   ```console
+   curl -v -XPUT -d 'your json body payload' 'http://localhost:7777/api/catalog/'
    ```
 
 Note: you can forge the ip you want by adding `-H "X-Forwarded-For: <any_ip>"` to your curl command
