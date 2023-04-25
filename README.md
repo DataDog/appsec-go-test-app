@@ -40,3 +40,11 @@ For example:
    ```
 
 Note: you can forge the ip you want by adding `-H "X-Forwarded-For: <any_ip>"` to your curl command
+
+### User blocking
+
+1. Register a user on 'http://127.0.0.1:7777/registration.html'
+
+2. Login on 'http://127.0.0.1:7777/login.html'
+
+3. Go to 'http://127.0.0.1:7777/auth'. If the user is blocked, the blocking page should be displayed
