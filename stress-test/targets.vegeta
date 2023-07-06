@@ -1,0 +1,22 @@
+GET http://127.0.0.1:7777/waf/.git
+
+GET http://127.0.0.1:7777/
+X-Forwarded-For: 1.1.1.1
+
+POST http://127.0.0.1:7777/canary
+X-Forwarded-For: 18.18.18.18
+User-Agent: dd-test-scanner-log
+
+POST http://127.0.0.1:7777/body
+User-Agent: dd-test-scanner-log
+@body.json
+
+POST http://127.0.0.1:7777/body
+@attack-body.json
+
+GET http://127.0.0.1:7777/query?param=union%20select%20*%20from%20users
+
+POST http://127.0.0.1:7777/good-user
+User-Agent: Arachni/v1.0
+
+GET http://127.0.0.1:7777/blocked-user
