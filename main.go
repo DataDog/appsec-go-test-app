@@ -13,6 +13,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,7 +46,11 @@ func (s *session) terminate() {
 }
 
 func main() {
-	tracer.Start()
+	service := os.Getenv("DD_SERVICE")
+	if service == "" {
+		service = "go-dvwa"
+	}
+	tracer.Start(tracer.WithService(service))
 	defer tracer.Stop()
 
 	profiler.Start()
