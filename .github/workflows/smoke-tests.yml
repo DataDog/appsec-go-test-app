@@ -21,12 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        golang: [ "1.20" ]
+        golang: [ "1.21-rc", "1.20", "1.19", "1.18" ]
         distrib: [ alpine, debian ]
         buildenv: [ base, vendoring ]
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: github.com/DataDog/appsec-go-test-app
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v4
         with:
