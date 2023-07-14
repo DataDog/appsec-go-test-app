@@ -32,9 +32,14 @@ jobs:
         with:
           context: .
           push: false
-          tags: user/app:latest
+          load: true
+          tags: go-dvwa
           target: ${{ matrix.distrib }}
           build-args: |
             golang=${{ matrix.golang }}
             buildenv=${{ matrix.buildenv }}
             tracer=${{ inputs.dd-trace-go-version }}
+      - name: Test
+        run: |
+          docker run -p7777:7777 --rm go-dvwa &
+          curl -v --retry 3 --fail 127.0.0.1:7777/
