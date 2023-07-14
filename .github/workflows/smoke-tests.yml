@@ -3,7 +3,7 @@ name: Compilation Smoke Tests
 on:
   workflow_call:
     inputs:
-      dd-trace-go-verion:
+      dd-trace-go-version:
         type: string
         required: true
         default: latest
