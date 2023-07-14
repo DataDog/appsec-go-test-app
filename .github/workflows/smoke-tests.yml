@@ -42,4 +42,5 @@ jobs:
       - name: Test
         run: |
           docker run -p7777:7777 --rm go-dvwa &
+          sleep 1
           curl -v --retry 3 --fail 127.0.0.1:7777/
