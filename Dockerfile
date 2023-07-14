@@ -1,20 +1,17 @@
-# build-env allows to further define the build environment to use. Expected
-# values are vendoring or musl:
-#  - vendoring: compiles with vendoring enabled
-#  - musl: compiles with musl-gcc
 ARG buildenv="base"
+ARG golang="1.20"
 
-FROM golang:1.20 AS base-build-env
+FROM golang:$golang AS base-build-env
 
 RUN apt update && apt install -y jq
 
 WORKDIR /app
 COPY . .
 
-ARG branch=""
+ARG tracer=""
 RUN set -eux && \
-    if [ "$branch" != "" ]; then \
-      COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$branch" | jq -r .[0].sha); \
+    if [ "$tracer" != "" ]; then \
+      COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
       go get -v -d gopkg.in/DataDog/dd-trace-go.v1@$COMMIT .; \
       go mod tidy; \
     fi
