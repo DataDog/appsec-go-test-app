@@ -11,7 +11,7 @@ on:
 
   workflow_dispatch:
     inputs:
-      dd-trace-go-verion:
+      dd-trace-go-version:
         type: string
         description: "dd-trace-go version to go get. Empty uses the go.mod one"
 
