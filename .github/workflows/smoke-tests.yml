@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        golang: [ "1.21-rc", "1.20", "1.19", "1.18" ]
+        golang: [ "1.21", "1.20", "1.19" ]
         distrib: [ alpine, debian ]
         buildenv: [ base, vendoring ]
 

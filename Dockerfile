@@ -1,5 +1,5 @@
 ARG buildenv="base"
-ARG golang="1.20"
+ARG golang="1.21"
 
 FROM golang:$golang AS base-build-env
 
