@@ -30,7 +30,7 @@ jobs:
         with:
           repository: DataDog/appsec-go-test-app
           # TODO(darccio): remove ref on v2 release
-          ref: a51125e6f4b0b4ece3715a7fc036f08945b58caa
+          ref: 4cec50bd1ff20ce0f058d4c83187275ef081c405
       - uses: docker/setup-buildx-action@v2
       - uses: docker/build-push-action@v4
         with:
