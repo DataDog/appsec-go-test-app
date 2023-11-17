@@ -10,11 +10,8 @@ COPY . .
 
 ARG tracer=""
 RUN set -eux && \
-    if [ "$tracer" != "" ]; then \
-      COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r ".[0].sha"); \
-      go get -v -u github.com/DataDog/dd-trace-go/v2@$COMMIT; \
-      go mod tidy; \
-    fi
+    go get -v -u github.com/DataDog/dd-trace-go/v2@v2-dev; \
+    go mod tidy
 
 # We must enforce CGO disabled in order to:
 # 1. Make sure dd-trace-go doesn't rely on it indeed.
