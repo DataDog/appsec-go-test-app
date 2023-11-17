@@ -3,15 +3,15 @@ module go-dvwa
 go 1.19
 
 require (
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231117090219-0c0ab8f4724f
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.4
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231026141357-d9d8b0ef3849
 )
 
 require (
-	github.com/DataDog/appsec-internal-go v1.0.0 // indirect
+	github.com/DataDog/appsec-internal-go v1.0.2 // indirect
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.48.1 // indirect
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.48.1 // indirect
 	github.com/DataDog/datadog-go/v5 v5.3.0 // indirect
@@ -42,7 +42,7 @@ require (
 	go4.org/intern v0.0.0-20230525184215-6c62f75575cb // indirect
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20230525183740-e7c30c78aeb2 // indirect
 	golang.org/x/mod v0.13.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
