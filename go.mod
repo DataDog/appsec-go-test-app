@@ -3,7 +3,7 @@ module go-dvwa
 go 1.19
 
 require (
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231117090219-0c0ab8f4724f
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231123083837-9d363fb1a25b
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/mux v1.8.0
@@ -15,7 +15,7 @@ require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.48.1 // indirect
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.48.1 // indirect
 	github.com/DataDog/datadog-go/v5 v5.3.0 // indirect
-	github.com/DataDog/go-libddwaf/v2 v2.1.0 // indirect
+	github.com/DataDog/go-libddwaf/v2 v2.2.0 // indirect
 	github.com/DataDog/go-tuf v1.0.2-0.5.2 // indirect
 	github.com/DataDog/gostackparse v0.7.0 // indirect
 	github.com/DataDog/sketches-go v1.4.3 // indirect
@@ -26,6 +26,8 @@ require (
 	github.com/ebitengine/purego v0.5.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/pprof v0.0.0-20231023181126-ff6d637d2a7b // indirect
+	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/lib/pq v1.10.4 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
