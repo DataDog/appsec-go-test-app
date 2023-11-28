@@ -13,6 +13,15 @@ $ docker-compose up --pull --build --attach app
 You can also pass custom tags with DD_TAGS and a custom service name with
 DD_SERVICE.
 
+#### Running in staging
+
+If you would like to connect to datadog staging, use the -s or --staging arguments:
+
+```bash
+$ source env.sh -s
+$ docker-compose up --pull --build --attach app
+```
+
 ## Attacking the app
 
 You should be able to attack the app on port 7777 of your machine =)
