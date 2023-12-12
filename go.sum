@@ -8,6 +8,8 @@ github.com/DataDog/datadog-go/v5 v5.3.0 h1:2q2qjFOb3RwAZNU+ez27ZVDwErJv5/VpbBPpr
 github.com/DataDog/datadog-go/v5 v5.3.0/go.mod h1:XRDJk1pTc00gm+ZDiBKsjh7oOOtJfYfglVCmFb8C2+Q=
 github.com/DataDog/dd-trace-go/v2 v2.0.0-20231212163056-1fb42b1a7eb6 h1:+k7afek4reumkx8u1/Gc2QrLXKj20H70KKusfCTBS6s=
 github.com/DataDog/dd-trace-go/v2 v2.0.0-20231212163056-1fb42b1a7eb6/go.mod h1:/qPpiSyeMTaq/cbOHrdWpfveTysGUHChP4U06beb/3A=
+github.com/DataDog/dd-trace-go/v2 v2.0.0-20231212163819-6a648f6c0d18 h1:FAaHdtDgrVYReg11WIvPRqsaoy/Xl1mMQ8XrNpAIXhI=
+github.com/DataDog/dd-trace-go/v2 v2.0.0-20231212163819-6a648f6c0d18/go.mod h1:/qPpiSyeMTaq/cbOHrdWpfveTysGUHChP4U06beb/3A=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20231212163056-1fb42b1a7eb6 h1:dRX7JDxLKKlgPtjalY+VJfco3YEt3quaFOY/ZSBoz2I=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20231212163056-1fb42b1a7eb6/go.mod h1:Iu/ZhZzB8EDFf4hXhIIB5gzqmZHFG57y/T5vzkiH3lM=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20231212163056-1fb42b1a7eb6 h1:utwO4jEtLN30iluCXc6acdmcFI6ikOe4NB+TasuUD4s=
