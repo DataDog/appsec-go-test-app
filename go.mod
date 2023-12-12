@@ -3,9 +3,9 @@ module go-dvwa
 go 1.19
 
 require (
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231129093805-942d87271c95
-	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20231129093805-942d87271c95
-	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20231129093805-942d87271c95
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20231212091735-59c3040c7e34
+	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20231212091735-59c3040c7e34
+	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20231212091735-59c3040c7e34
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.3.1
 	github.com/gorilla/mux v1.8.0
@@ -13,17 +13,20 @@ require (
 )
 
 require (
-	github.com/DataDog/appsec-internal-go v1.0.2 // indirect
+	github.com/DataDog/appsec-internal-go v1.1.0 // indirect
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.48.1 // indirect
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.48.1 // indirect
+	github.com/DataDog/datadog-agent/pkg/util/log v0.49.0 // indirect
+	github.com/DataDog/datadog-agent/pkg/util/scrubber v0.49.0 // indirect
 	github.com/DataDog/datadog-go/v5 v5.3.0 // indirect
-	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20231129093805-942d87271c95 // indirect
-	github.com/DataDog/go-libddwaf/v2 v2.2.0 // indirect
+	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20231212091735-59c3040c7e34 // indirect
+	github.com/DataDog/go-libddwaf/v2 v2.2.2 // indirect
 	github.com/DataDog/go-tuf v1.0.2-0.5.2 // indirect
 	github.com/DataDog/gostackparse v0.7.0 // indirect
 	github.com/DataDog/sketches-go v1.4.3 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/ebitengine/purego v0.5.0 // indirect
@@ -51,6 +54,7 @@ require (
 	golang.org/x/tools v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	inet.af/netaddr v0.0.0-20230525184311-b8eac61e914a // indirect
 	modernc.org/libc v1.28.0 // indirect
