@@ -7,7 +7,7 @@ the Go test app.
 # Source the testing environment
 $ source env.sh
 # Start the app and agent containers using docker-compose
-$ docker-compose up --pull --build --attach app
+$ docker-compose up --pull 'always' --build --attach app
 ```
 
 You can also pass custom tags with DD_TAGS and a custom service name with
