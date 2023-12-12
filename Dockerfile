@@ -9,6 +9,7 @@ WORKDIR /app
 COPY . .
 
 ARG tracer=""
+ENV GOPROXY=direct
 RUN set -eux && \
     go get -v -u github.com/DataDog/dd-trace-go/v2@v2-dev; \
     go mod tidy
