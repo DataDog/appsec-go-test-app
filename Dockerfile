@@ -10,8 +10,12 @@ COPY . .
 
 ARG tracer=""
 RUN set -eux && \
-    go get -v -u github.com/DataDog/dd-trace-go/v2@v2-dev; \
-    go mod tidy
+    if [ "$tracer" != "" ]; then \
+      go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/database/sql@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux@${tracer}; \
+      go mod tidy; \
+    fi
 
 # We must enforce CGO disabled in order to:
 # 1. Make sure dd-trace-go doesn't rely on it indeed.
