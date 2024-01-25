@@ -3,9 +3,9 @@ module go-dvwa
 go 1.19
 
 require (
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125123640-ec2e8e223b44
-	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125123640-ec2e8e223b44
-	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125123640-ec2e8e223b44
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125125248-7db38abcf164
+	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125125248-7db38abcf164
+	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125125248-7db38abcf164
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.5.0
 	github.com/gorilla/mux v1.8.0
@@ -17,7 +17,7 @@ require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.50.0 // indirect
 	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.50.0 // indirect
 	github.com/DataDog/datadog-go/v5 v5.4.0 // indirect
-	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240110155633-0f76e55459be // indirect
+	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240125124054-68de6a751ca1 // indirect
 	github.com/DataDog/go-libddwaf/v2 v2.2.3 // indirect
 	github.com/DataDog/go-sqllexer v0.0.10 // indirect
 	github.com/DataDog/go-tuf v1.0.2-0.5.2 // indirect
