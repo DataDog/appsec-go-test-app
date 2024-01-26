@@ -18,6 +18,8 @@ github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125124054-68de6a751ca1 h1:tJNi6Vbv
 github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125124054-68de6a751ca1/go.mod h1:xBOE4HUzKYgS7n3GhUHZfETSsUB1slLDDBAyM/nrmA0=
 github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125125248-7db38abcf164 h1:BGKx0rVrZKam2WCgTaBjSrnF/kDR1KiIbCdG0Gbm0cU=
 github.com/DataDog/dd-trace-go/v2 v2.0.0-20240125125248-7db38abcf164/go.mod h1:2jrAj0FfCnjAHAa/p2PFYRdgYtUh24S2dSJu5DM9iE8=
+github.com/DataDog/dd-trace-go/v2 v2.0.0-20240126143828-37539064d80f h1:FQIRrnixjSvlqLj3WcCVQYy77zgiO5/5Ie1MpYdgiDU=
+github.com/DataDog/dd-trace-go/v2 v2.0.0-20240126143828-37539064d80f/go.mod h1:jcJ2a9Sz4MkWqxYi9fufYzURI7eIj7zJchzIlOG0w3Y=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240110133549-43f3d5e46c15 h1:R8NudKTZtASLS3T84SKPZl7NpKJowBjUXCTJGy1A5Ww=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240110133549-43f3d5e46c15/go.mod h1:LC+kMtz7E79uFAyowZhSo1N8iqwpuqJ9OSsLCfn88sw=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240110155633-0f76e55459be h1:dfXh22AR63kcppsZ0KoUaKD0Z8pKq7PO0Cw6jk/h1kM=
@@ -28,6 +30,8 @@ github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125123640-ec2
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125123640-ec2e8e223b44/go.mod h1:ofmm6ssIa/D7/wHNyzqwdn0bd5BjQhnhN9TRQhZckPE=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125125248-7db38abcf164 h1:/5v2vj+Hb67X4pAGse/pg95T5VFg+5cPvP2F97RP10g=
 github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240125125248-7db38abcf164/go.mod h1:ofmm6ssIa/D7/wHNyzqwdn0bd5BjQhnhN9TRQhZckPE=
+github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240126143828-37539064d80f h1:nh2Nn0L0L5Ug9fGHYQU0Dg4CLA/aW4jWYFyE4+8G8uo=
+github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240126143828-37539064d80f/go.mod h1:sJVnYJ9uXEQppigioazCjiJS0HGx69Hz8VRQ2NpXhZY=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240110133549-43f3d5e46c15 h1:hYdfe1b50RLmiwPd7WIqDSfd6i5Uquwdp6Yo66y/jjs=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240110133549-43f3d5e46c15/go.mod h1:eoSAXwCyPJ7wTVbYl6IEGkx58wIdE1DoVqiDERHvq3M=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240110155633-0f76e55459be h1:4q1CNcBQv+UCkKB7nIgQk3VO/ieFoGvnpnAZJQkyO0c=
@@ -38,6 +42,8 @@ github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125123640-ec2e
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125123640-ec2e8e223b44/go.mod h1:bWzwelqWHNqj/GUrr1yrs8DX9ktif8iP5/+/nQByIxA=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125125248-7db38abcf164 h1:KCzPue/PQywPeFM7bjTnf91VoUEoJ1Hpnbe5MQ09IGc=
 github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240125125248-7db38abcf164/go.mod h1:mzMUF80g0Rh4jAkYDc2Rkjq5a7NHTwEV3LwTPn/DUkw=
+github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240126143828-37539064d80f h1:foGmpIjEmR7uu/QLmK7miHKvOT1Ik8Qqisva6K2i87Q=
+github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240126143828-37539064d80f/go.mod h1:iw7J2IBs8KN0z3TTtJK3vEeg9AtbV8WFm20RBU9+FVE=
 github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240110155633-0f76e55459be h1:2Tw1vdoRz83omM6QohHL4lsiDUay0vIkehYWqFnlhS0=
 github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240110155633-0f76e55459be/go.mod h1:BVPN/n2pT7y8ybGdVa2UFwbEDn8PpLFQzDypIqpr8vw=
 github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240125124054-68de6a751ca1 h1:tzLHz/p3CY2OVN7pGoNPIYPwvRDFGuoJAgK2Y2qVHtY=
