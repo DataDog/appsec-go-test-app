@@ -3,9 +3,9 @@ module go-dvwa
 go 1.19
 
 require (
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240201092428-3c273d5c8038
-	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240201092428-3c273d5c8038
-	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240201092428-3c273d5c8038
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240201093249-2c96377d4f3d
+	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240201093249-2c96377d4f3d
+	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240201093249-2c96377d4f3d
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.5.0
 	github.com/gorilla/mux v1.8.0
