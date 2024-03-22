@@ -254,6 +254,23 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		io.WriteString(w, `{"status":"ok"}`)
 	})
 
+	// /test api to test some extra behaviours during the QA of dd-trace-go
+	r.HandleFunc("/success/login", func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Content-Type", "application/json")
+		// set response status code to 200
+		if r.Method == "POST" {
+			w.WriteHeader(http.StatusOK)
+		}
+	})
+	// /test api to test some extra behaviours during the QA of dd-trace-go
+	r.HandleFunc("/failure/login", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		// set response status code to 401
+		if r.Method == "POST" {
+			w.WriteHeader(http.StatusUnauthorized)
+		}
+	})
 	r.PathPrefix("/").Handler(http.FileServer(http.FS(templateFS)))
 
 	return r

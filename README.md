@@ -10,6 +10,9 @@ $ source env.sh
 $ docker-compose up --pull 'always' --build --attach app
 ```
 
+> [!NOTE] 
+> If you would like to connect to a staging run you must run `source env.sh --staging` to set up the env
+
 You can also pass custom tags with DD_TAGS and a custom service name with
 DD_SERVICE.
 
