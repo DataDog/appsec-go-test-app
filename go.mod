@@ -3,9 +3,9 @@ module go-dvwa
 go 1.19
 
 require (
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240223105017-0206562b3b5d
-	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240223105017-0206562b3b5d
-	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240223105017-0206562b3b5d
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240322112422-918fafcb21fa
+	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240322112422-918fafcb21fa
+	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240322112422-918fafcb21fa
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/google/uuid v1.5.0
 	github.com/gorilla/mux v1.8.0
@@ -13,11 +13,13 @@ require (
 )
 
 require (
-	github.com/DataDog/appsec-internal-go v1.4.1 // indirect
-	github.com/DataDog/datadog-agent/pkg/obfuscate v0.48.1 // indirect
-	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.48.1 // indirect
-	github.com/DataDog/datadog-go/v5 v5.3.0 // indirect
-	github.com/DataDog/go-libddwaf/v2 v2.3.1 // indirect
+	github.com/DataDog/appsec-internal-go v1.5.0 // indirect
+	github.com/DataDog/datadog-agent/pkg/obfuscate v0.50.0 // indirect
+	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.50.0 // indirect
+	github.com/DataDog/datadog-go/v5 v5.4.0 // indirect
+	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240322112422-918fafcb21fa // indirect
+	github.com/DataDog/go-libddwaf/v2 v2.3.2 // indirect
+	github.com/DataDog/go-sqllexer v0.0.10 // indirect
 	github.com/DataDog/go-tuf v1.0.2-0.5.2 // indirect
 	github.com/DataDog/gostackparse v0.7.0 // indirect
 	github.com/DataDog/sketches-go v1.4.3 // indirect
@@ -42,10 +44,10 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/tinylib/msgp v1.1.9 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/mod v0.13.0 // indirect
+	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/time v0.3.0 // indirect
-	golang.org/x/tools v0.14.0 // indirect
+	golang.org/x/time v0.5.0 // indirect
+	golang.org/x/tools v0.16.1 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
