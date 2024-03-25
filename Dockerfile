@@ -35,7 +35,7 @@ RUN go mod tidy && go mod vendor
 # $buildenv defaults to base and allows to be changed into vendoring to test
 # this alternative
 FROM $buildenv-build-env AS build
-RUN go build -v -tags appsec .
+RUN go mod tidy && go build -v -tags appsec .
 
 # debian target
 FROM debian:11-slim AS debian
