@@ -9,7 +9,6 @@ import (
 	"crypto/tls"
 	"embed"
 	"encoding/json"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"html/template"
 	"io"
 	"io/fs"
@@ -26,6 +25,7 @@ import (
 
 	"github.com/DataDog/dd-trace-go/v2/appsec"
 	muxtrace "github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux"
+	httptrace "github.com/DataDog/dd-trace-go/v2/contrib/net/http"
 	"github.com/DataDog/dd-trace-go/v2/ddtrace/tracer"
 	"github.com/DataDog/dd-trace-go/v2/profiler"
 )
