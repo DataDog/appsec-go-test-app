@@ -6,13 +6,16 @@
 package main
 
 import (
+	"crypto/tls"
 	"embed"
 	"encoding/json"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"html/template"
 	"io"
 	"io/fs"
 	"log"
 	"net/http"
+	url2 "net/url"
 	"os"
 	"time"
 
@@ -46,11 +49,15 @@ func (s *session) terminate() {
 }
 
 func main() {
+	env := os.Getenv("DD_ENV")
+	if env == "" {
+		env = "appsec-go-test-app"
+	}
 	service := os.Getenv("DD_SERVICE")
 	if service == "" {
 		service = "go-dvwa"
 	}
-	tracer.Start(tracer.WithService(service))
+	tracer.Start(tracer.WithService(service), tracer.WithEnv(env))
 	defer tracer.Stop()
 
 	profiler.Start()
@@ -62,7 +69,11 @@ func main() {
 	}
 
 	mux := NewRouter(templateFS)
-	addr := ":7777"
+	addr := "127.0.0.1:7777"
+	if len(os.Args) > 1 {
+		addr = os.Args[1]
+	}
+
 	log.Println("Serving application on", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalln(err)
@@ -80,6 +91,10 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		log.Fatalln(err)
 	}
 
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // <--- Problem
+	}
+	httpclient := httptrace.WrapClient(&http.Client{Transport: tr})
 	r := muxtrace.NewRouter()
 
 	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
@@ -254,23 +269,33 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		io.WriteString(w, `{"status":"ok"}`)
 	})
 
-	// /test api to test some extra behaviours during the QA of dd-trace-go
-	r.HandleFunc("/success/login", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/ssrf", func(w http.ResponseWriter, r *http.Request) {
+		url, err := url2.Parse("https://meowfacts.herokuapp.com/")
+		if err != nil {
+			panic(err)
+		}
 
-		w.Header().Set("Content-Type", "application/json")
-		// set response status code to 200
-		if r.Method == "POST" {
-			w.WriteHeader(http.StatusOK)
+		if r.URL.Query().Get("host") != "" {
+			url.Host = r.URL.Query().Get("host")
 		}
-	})
-	// /test api to test some extra behaviours during the QA of dd-trace-go
-	r.HandleFunc("/failure/login", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		// set response status code to 401
-		if r.Method == "POST" {
-			w.WriteHeader(http.StatusUnauthorized)
+
+		req, err := http.NewRequest("GET", url.String(), nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+
+		resp, err := httpclient.Do(req.WithContext(r.Context()))
+		if err != nil {
+			return
+		}
+
+		defer resp.Body.Close()
+
+		w.WriteHeader(200)
+		io.Copy(w, resp.Body)
 	})
+
 	r.PathPrefix("/").Handler(http.FileServer(http.FS(templateFS)))
 
 	return r
