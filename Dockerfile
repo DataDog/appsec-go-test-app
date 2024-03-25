@@ -35,6 +35,7 @@ RUN go mod vendor
 # $buildenv defaults to base and allows to be changed into vendoring to test
 # this alternative
 FROM $buildenv-build-env AS build
+RUN go mod tidy
 RUN go build -v -tags appsec .
 
 # debian target
