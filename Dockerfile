@@ -11,8 +11,9 @@ COPY . .
 ARG tracer=""
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
-      COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
-      go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$COMMIT; \
+      go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/database/sql@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux@${tracer}; \
       go mod tidy; \
     fi
 
@@ -29,12 +30,12 @@ ENV CGO_ENABLED=0
 
 # vendoring alternative
 FROM base-build-env AS vendoring-build-env
-RUN go mod vendor
+RUN go mod tidy && go mod vendor
 
 # $buildenv defaults to base and allows to be changed into vendoring to test
 # this alternative
 FROM $buildenv-build-env AS build
-RUN go build -v -tags appsec .
+RUN go mod tidy && go build -v -tags appsec .
 
 # debian target
 FROM debian:11-slim AS debian
