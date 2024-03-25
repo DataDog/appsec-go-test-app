@@ -6,7 +6,7 @@ on:
       dd-trace-go-version:
         type: string
         required: true
-        default: latest
+        default: v2-dev
         description: "dd-trace-go version to go get"
 
   workflow_dispatch:
