@@ -42,6 +42,11 @@ For example:
    curl -v -XPUT -d 'your json body payload' 'http://localhost:7777/api/catalog/'
    ```
 
+4. SSRF Exploit Prevention:
+   ```console
+   curl -v 'http://localhost:7777/ssrf?host=169.254.169.254'
+   ```
+
 Note: you can forge the ip you want by adding `-H "X-Forwarded-For: <any_ip>"` to your curl command
 
 ### User blocking
