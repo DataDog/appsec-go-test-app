@@ -11,6 +11,7 @@ services:
       DD_ENV: ${DD_ENV:-testing}
     ports:
       - 7777:7777
+      - 7778:7778
 
   agent:
     image: datadog/agent
