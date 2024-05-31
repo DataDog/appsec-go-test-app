@@ -83,13 +83,10 @@ func main() {
 	}
 
 	mux := NewRouter(templateFS)
-	addr := "127.0.0.1:7777"
-	if len(os.Args) > 1 {
-		addr = os.Args[1]
-	}
+	addr := "0.0.0.0:7777"
 
 	// Start listening gRPC
-	lis, err := net.Listen("tcp", "127.0.0.1:7778")
+	lis, err := net.Listen("tcp", "0.0.0.0:7778")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
