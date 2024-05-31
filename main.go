@@ -6,14 +6,15 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"embed"
 	"encoding/json"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"html/template"
 	"io"
 	"io/fs"
 	"log"
+	"net"
 	"net/http"
 	url2 "net/url"
 	"os"
@@ -21,11 +22,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-
+	pb "go-dvwa/api/grpc/pb"
 	"go-dvwa/vulnerable"
+	"google.golang.org/grpc"
 
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec"
+	grpctrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/google.golang.org/grpc"
 	muxtrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gorilla/mux"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
 	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
@@ -46,6 +50,16 @@ func (s *session) active() bool {
 
 func (s *session) terminate() {
 	delete(sessions, s.token)
+}
+
+type server struct {
+	pb.UnimplementedGreeterServer
+}
+
+// SayHello implements helloworld.GreeterServer
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 func main() {
@@ -74,6 +88,21 @@ func main() {
 		addr = os.Args[1]
 	}
 
+	// Start listening gRPC
+	lis, err := net.Listen("tcp", "127.0.0.1:7778")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer(grpc.UnaryInterceptor(grpctrace.UnaryServerInterceptor()))
+	pb.RegisterGreeterServer(s, &server{})
+	log.Printf("Serving gRPC API on %v", lis.Addr())
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
+	// Start listening HTTP
 	log.Println("Serving application on", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalln(err)
