@@ -10,6 +10,9 @@ import (
 	"crypto/tls"
 	"embed"
 	"encoding/json"
+	"errors"
+	"gopkg.in/DataDog/dd-trace-go.v1/appsec/events"
+	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"html/template"
 	"io"
 	"io/fs"
@@ -315,7 +318,7 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	})
 
 	r.HandleFunc("/ssrf", func(w http.ResponseWriter, r *http.Request) {
-		url, err := url2.Parse("https://meowfacts.herokuapp.com/")
+		url, err := url2.Parse("http://meowfacts.herokuapp.com/")
 		if err != nil {
 			panic(err)
 		}
@@ -325,6 +328,11 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		}
 
 		req, err := http.NewRequest("GET", url.String(), nil)
+		if errors.Is(err, &events.BlockingSecurityEvent{}) {
+			println("blocked")
+			return
+		}
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
