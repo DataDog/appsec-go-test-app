@@ -11,8 +11,6 @@ import (
 	"embed"
 	"encoding/json"
 	"errors"
-	"gopkg.in/DataDog/dd-trace-go.v1/appsec/events"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"html/template"
 	"io"
 	"io/fs"
@@ -30,6 +28,7 @@ import (
 	"google.golang.org/grpc"
 
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec"
+	"gopkg.in/DataDog/dd-trace-go.v1/appsec/events"
 	grpctrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/google.golang.org/grpc"
 	muxtrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gorilla/mux"
 	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
