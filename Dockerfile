@@ -9,10 +9,18 @@ WORKDIR /app
 COPY . .
 
 ARG tracer=""
+
+# If the first go get fails, we wait for github to register the commit (or stop rate limiting us)
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
-      COMMIT=$(curl --fail -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
-      go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$COMMIT; \
+      if !go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$tracer; then \
+        COMMIT=""; \
+        while [ -z "$COMMIT" ]; do \
+          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
+          sleep 1; \
+        done; \
+        go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$tracer; \
+      fi; \
       go mod tidy; \
     fi
 
