@@ -47,14 +47,12 @@ RUN go build -v -tags appsec .
 # debian target
 FROM debian:11-slim AS debian
 COPY --from=build /app/go-dvwa /usr/local/bin
-ENV DD_APPSEC_ENABLED=1
-ENV DD_TRACE_DEBUG=true
+ENV DD_APPSEC_ENABLED=1 DD_TRACE_DEBUG=true DD_APPSEC_WAF_TIMEOUT=1h
 CMD ["/usr/local/bin/go-dvwa", ":7777"]
 
 # alpine target
 FROM alpine AS alpine
 COPY --from=build /app/go-dvwa /usr/local/bin
 RUN apk update && apk add libc6-compat
-ENV DD_APPSEC_ENABLED=1
-ENV DD_TRACE_DEBUG=true
+ENV DD_APPSEC_ENABLED=1 DD_TRACE_DEBUG=true DD_APPSEC_WAF_TIMEOUT=1h
 CMD ["/usr/local/bin/go-dvwa", ":7777"]
