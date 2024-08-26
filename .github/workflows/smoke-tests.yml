@@ -16,15 +16,29 @@ on:
         description: "dd-trace-go version to go get. Empty uses the go.mod one"
 
 jobs:
+  matrix:
+    name: Test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.json }}
+    steps:
+      - name: Build
+        id: matrix
+        run: |-
+          versions=$(curl -fSsL "https://golang.org/dl/?mode=json" | jq -r 'map(.version | capture("go(?<version>\\d+\\.\\d+)").version) | unique')
+          distribs=$(echo $versions | jq -r 'map([{ golang: ., distrib: "alpine" }, { golang: ., distrib: "debian" }]) | flatten')
+          matrix=$(echo $distribs | jq -r '. | map([setpath(["buildenv"]; "base"), setpath(["buildenv"]; "vendoring")]) | flatten')
+          echo "json<<EOF" >> "${GITHUB_OUTPUT}"
+          echo "${matrix}" >> "${GITHUB_OUTPUT}"
+          echo "EOF" >> "${GITHUB_OUTPUT}"
   build:
     name: "Build go-dvwa"
     runs-on: ubuntu-latest
+    needs: [matrix]
     strategy:
       fail-fast: false
       matrix:
-        golang: [ "1.23", "1.22", "1.21" ]
-        distrib: [ alpine, debian ]
-        buildenv: [ base, vendoring ]
+        include: ${{ fromJson(needs.matrix.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v3
