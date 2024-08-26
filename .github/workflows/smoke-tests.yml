@@ -20,8 +20,9 @@ jobs:
     name: "Build go-dvwa"
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        golang: [ "1.22", "1.21", "1.20" ]
+        golang: [ "1.23", "1.22", "1.21" ]
         distrib: [ alpine, debian ]
         buildenv: [ base, vendoring ]
 
