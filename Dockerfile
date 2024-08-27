@@ -9,11 +9,24 @@ WORKDIR /app
 COPY . .
 
 ARG tracer=""
+
+# If the first go get fails, we wait for github to register the commit (or stop rate limiting us)
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
       go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
       go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/database/sql@${tracer}; \
       go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux@${tracer}; \
+      if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
+        COMMIT=""; \
+        while [ -z "$COMMIT" ]; do \
+          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
+          sleep 1; \
+        done; \
+        go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
+      fi; \
       go mod tidy; \
     fi
 
@@ -40,14 +53,12 @@ RUN go mod tidy && go build -v -tags appsec .
 # debian target
 FROM debian:11-slim AS debian
 COPY --from=build /app/go-dvwa /usr/local/bin
-ENV DD_APPSEC_ENABLED=1
-ENV DD_TRACE_DEBUG=true
+ENV DD_APPSEC_ENABLED=1 DD_TRACE_DEBUG=true DD_APPSEC_WAF_TIMEOUT=1h
 CMD ["/usr/local/bin/go-dvwa", ":7777"]
 
 # alpine target
 FROM alpine AS alpine
 COPY --from=build /app/go-dvwa /usr/local/bin
 RUN apk update && apk add libc6-compat
-ENV DD_APPSEC_ENABLED=1
-ENV DD_TRACE_DEBUG=true
+ENV DD_APPSEC_ENABLED=1 DD_TRACE_DEBUG=true DD_APPSEC_WAF_TIMEOUT=1h
 CMD ["/usr/local/bin/go-dvwa", ":7777"]

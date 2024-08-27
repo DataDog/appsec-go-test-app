@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"embed"
 	"encoding/json"
@@ -13,19 +14,23 @@ import (
 	"io"
 	"io/fs"
 	"log"
+	"net"
 	"net/http"
 	url2 "net/url"
 	"os"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/gorilla/mux"
-
+	pb "go-dvwa/api/grpc/pb"
 	"go-dvwa/vulnerable"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
+
+	grpctrace "github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2"
+	muxtrace "github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2"
+	httptrace "github.com/DataDog/dd-trace-go/contrib/net/http/v2"
 	"github.com/DataDog/dd-trace-go/v2/appsec"
-	muxtrace "github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux"
-	httptrace "github.com/DataDog/dd-trace-go/v2/contrib/net/http"
 	"github.com/DataDog/dd-trace-go/v2/ddtrace/tracer"
 	"github.com/DataDog/dd-trace-go/v2/profiler"
 )
@@ -46,6 +51,16 @@ func (s *session) active() bool {
 
 func (s *session) terminate() {
 	delete(sessions, s.token)
+}
+
+type server struct {
+	pb.UnimplementedGreeterServer
+}
+
+// SayHello implements helloworld.GreeterServer
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
 }
 
 func main() {
@@ -69,11 +84,23 @@ func main() {
 	}
 
 	mux := NewRouter(templateFS)
-	addr := "127.0.0.1:7777"
-	if len(os.Args) > 1 {
-		addr = os.Args[1]
-	}
+	addr := "0.0.0.0:7777"
 
+	// Start listening gRPC
+	lis, err := net.Listen("tcp", "0.0.0.0:7778")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer(grpc.UnaryInterceptor(grpctrace.UnaryServerInterceptor()))
+	pb.RegisterGreeterServer(s, &server{})
+	log.Printf("Serving gRPC API on %v", lis.Addr())
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+
+	// Start listening HTTP
 	log.Println("Serving application on", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalln(err)
@@ -289,7 +316,7 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	})
 
 	r.HandleFunc("/ssrf", func(w http.ResponseWriter, r *http.Request) {
-		url, err := url2.Parse("https://meowfacts.herokuapp.com/")
+		url, err := url2.Parse("http://meowfacts.herokuapp.com/")
 		if err != nil {
 			panic(err)
 		}
@@ -299,6 +326,11 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		}
 
 		req, err := http.NewRequest("GET", url.String(), nil)
+		/*if errors.Is(err, &events.BlockingSecurityEvent{}) {
+			println("blocked")
+			return
+		}*/
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

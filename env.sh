@@ -13,13 +13,12 @@ else
     vault login -method=oidc
     export DD_SITE=datadoghq.com
     export DD_ENV=prod-peer-testing
-    export DD_API_KEY="$(vault kvs get -format json applications/datadog-agent/shared/agent_api_key_appsec_test_org | jq -r .data.value)"
+    export DD_API_KEY="$(vault kv get -format json applications/datadog-agent/shared/agent_api_key_appsec_test_org | jq -r .data.value)"
+    export DD_REMOTE_CONFIGURATION_KEY="$(vault kv get -format json applications/datadog-agent/shared/agent_remote_config_key_appsec_test_org | jq -r .data.value)"
 fi
 export DD_REMOTE_CONFIGURATION_ENABLED=true
 export DD_HOSTNAME=$(ddtool auth whoami --format json | jq '.name' -r)
 export DD_SERVICE=solo-testing-$DD_HOSTNAME
 export DD_DOGSTATSD_NON_LOCAL_TRAFFIC="true"
 export DD_REMOTE_CONFIGURATION_ENABLED="true"
-export DD_API_KEY="$(vault kv get -format json applications/datadog-agent/shared/agent_api_key_appsec_test_org | jq -r .data.value)"
-export DD_REMOTE_CONFIGURATION_KEY="$(vault kv get -format json applications/datadog-agent/shared/agent_remote_config_key_appsec_test_org | jq -r .data.value)"
 unset VAULT_ADDR

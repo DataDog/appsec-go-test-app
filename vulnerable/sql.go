@@ -29,15 +29,7 @@ CREATE TABLE product (
 `
 
 func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
-	// Hack to get the driver pointer through db.Driver() since it is not exposed
-	db, err := sql.Open("sqlite", ":memory:")
-	if err != nil {
-		log.Fatalln("unexpected sql.Open error:", err)
-	}
-	sqltrace.Register("sqlite", db.Driver())
-	db.Close()
-
-	db, err = sqltrace.Open("sqlite", ":memory:")
+	db, err := sql.Open("sqlite", "file::memory:?cache=shared")
 	if err != nil {
 		log.Fatalln("unexpected sql.Open error:", err)
 	}
@@ -64,6 +56,14 @@ func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	db.Close()
+
+	// Reopen the database to enable tracing
+	db, err = sqltrace.Open("sqlite", "file::memory:?cache=shared")
+	if err != nil {
+		log.Fatalln("unexpected sqltrace.Open error:", err)
 	}
 
 	return db, nil
