@@ -14,8 +14,9 @@ ARG tracer=""
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
       go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
-      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/database/sql@${tracer}; \
-      go get -v -u github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
       if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
         COMMIT=""; \
         while [ -z "$COMMIT" ]; do \
