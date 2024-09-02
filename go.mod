@@ -3,16 +3,17 @@ module go-dvwa
 go 1.22.0
 
 require (
+	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.0.0-20240902131707-47c2b19fbd05
+	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.0.0-beta.2.0.20240902131707-47c2b19fbd05
+	github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2 v2.0.0-20240902131707-47c2b19fbd05
+	github.com/DataDog/dd-trace-go/contrib/net/http/v2 v2.0.0-20240902131707-47c2b19fbd05
+	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240902131707-47c2b19fbd05
 	github.com/glebarez/go-sqlite v1.22.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/stretchr/testify v1.9.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-20240325145934-09c1b4fddaea
-	github.com/DataDog/dd-trace-go/v2/contrib/database/sql v0.0.0-20240325145934-09c1b4fddaea
-	github.com/DataDog/dd-trace-go/v2/contrib/gorilla/mux v0.0.0-20240325145934-09c1b4fddaea
-	github.com/DataDog/dd-trace-go/v2/contrib/net/http v0.0.0-20240325145934-09c1b4fddaea
 )
 
 require (
@@ -35,7 +36,6 @@ require (
 	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.8 // indirect
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.6 // indirect
-	github.com/kr/pretty v0.3.0 // indirect
 	github.com/lib/pq v1.10.4 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
@@ -47,7 +47,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/richardartoul/molecule v1.0.1-0.20240531184615-7ca0df43c0b3 // indirect
-	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.8.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
