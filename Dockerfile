@@ -13,13 +13,20 @@ ARG tracer=""
 # If the first go get fails, we wait for github to register the commit (or stop rate limiting us)
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
-      if !go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$tracer; then \
+      go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
+      if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
         COMMIT=""; \
         while [ -z "$COMMIT" ]; do \
           COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
           sleep 1; \
         done; \
-        go get -v -u gopkg.in/DataDog/dd-trace-go.v1@$tracer; \
+        go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
+        go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
       fi; \
       go mod tidy; \
     fi
@@ -37,12 +44,12 @@ ENV CGO_ENABLED=0
 
 # vendoring alternative
 FROM base-build-env AS vendoring-build-env
-RUN go mod vendor
+RUN go mod tidy && go mod vendor
 
 # $buildenv defaults to base and allows to be changed into vendoring to test
 # this alternative
 FROM $buildenv-build-env AS build
-RUN go build -v -tags appsec .
+RUN go mod tidy && go build -v -tags appsec .
 
 # debian target
 FROM debian:11-slim AS debian
