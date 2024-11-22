@@ -19,6 +19,7 @@ import (
 	"net/http"
 	url2 "net/url"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
@@ -29,11 +30,7 @@ import (
 
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec"
 	"gopkg.in/DataDog/dd-trace-go.v1/appsec/events"
-	grpctrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/google.golang.org/grpc"
-	muxtrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/gorilla/mux"
-	httptrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/net/http"
 	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
-	"gopkg.in/DataDog/dd-trace-go.v1/profiler"
 )
 
 //go:embed template
@@ -65,20 +62,6 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func main() {
-	env := os.Getenv("DD_ENV")
-	if env == "" {
-		env = "appsec-go-test-app"
-	}
-	service := os.Getenv("DD_SERVICE")
-	if service == "" {
-		service = "go-dvwa"
-	}
-	tracer.Start(tracer.WithService(service), tracer.WithEnv(env))
-	defer tracer.Stop()
-
-	profiler.Start()
-	defer profiler.Stop()
-
 	templateFS, err := fs.Sub(contentFS, "template")
 	if err != nil {
 		log.Fatalln(err)
@@ -92,7 +75,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer(grpc.UnaryInterceptor(grpctrace.UnaryServerInterceptor()))
+	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("Serving gRPC API on %v", lis.Addr())
 	go func() {
@@ -108,7 +91,7 @@ func main() {
 	}
 }
 
-func NewRouter(templateFS fs.FS) *muxtrace.Router {
+func NewRouter(templateFS fs.FS) *mux.Router {
 	db, err := vulnerable.PrepareSQLDB(10)
 	if err != nil {
 		log.Println("could not prepare the sql database :", err)
@@ -122,8 +105,8 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // <--- Problem
 	}
-	httpclient := httptrace.WrapClient(&http.Client{Transport: tr})
-	r := muxtrace.NewRouter()
+	httpclient := &http.Client{Transport: tr}
+	r := mux.NewRouter()
 
 	r.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		if s := sessionFromRequest(r); s != nil && s.active() {
@@ -327,17 +310,17 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 		}
 
 		req, err := http.NewRequest("GET", url.String(), nil)
-		if errors.Is(err, &events.BlockingSecurityEvent{}) {
-			println("blocked")
-			return
-		}
-
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		resp, err := httpclient.Do(req.WithContext(r.Context()))
+		if errors.Is(err, &events.BlockingSecurityEvent{}) {
+			log.Println("SSRF request blocked")
+			return
+		}
+
 		if err != nil {
 			return
 		}
@@ -346,6 +329,29 @@ func NewRouter(templateFS fs.FS) *muxtrace.Router {
 
 		w.WriteHeader(200)
 		io.Copy(w, resp.Body)
+	})
+
+	r.HandleFunc("/lfi", func(w http.ResponseWriter, r *http.Request) {
+		path := "/etc/os-release"
+		if r.URL.Query().Get("file") != "" {
+			path = filepath.Join(path, r.URL.Query().Get("file")) // <-- The actual LFI vulnerability is here
+		}
+
+		fp, err := os.Open(path)
+		if errors.Is(err, &events.BlockingSecurityEvent{}) {
+			log.Println("LFI request blocked")
+			return
+		}
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer fp.Close()
+
+		w.WriteHeader(200)
+		io.Copy(w, fp)
 	})
 
 	r.PathPrefix("/").Handler(http.FileServer(http.FS(templateFS)))

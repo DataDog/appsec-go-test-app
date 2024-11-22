@@ -8,12 +8,20 @@ on:
         required: true
         default: latest
         description: "dd-trace-go version to go get"
+      orchestrion-version:
+        type: string
+        required: true
+        default: latest
+        description: "orchestrion version to go install"
 
   workflow_dispatch:
     inputs:
       dd-trace-go-version:
         type: string
         description: "dd-trace-go version to go get. Empty uses the go.mod one"
+      orchestrion-version:
+        type: string
+        description: "orchestrion version to go install. Empty uses the go.mod one"
 
 jobs:
   matrix:
@@ -34,7 +42,7 @@ jobs:
   build:
     name: "Build go-dvwa"
     runs-on: ubuntu-latest
-    needs: [matrix]
+    needs: [ matrix ]
     strategy:
       fail-fast: false
       matrix:
@@ -56,6 +64,7 @@ jobs:
             golang=${{ matrix.golang }}
             buildenv=${{ matrix.buildenv }}
             tracer=${{ inputs.dd-trace-go-version }}
+            orchestrion=${{ inputs.orchestrion-version }}
       - name: Test
         run: |
           docker run -p7777:7777 --rm go-dvwa &

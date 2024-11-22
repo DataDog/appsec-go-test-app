@@ -7,10 +7,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 
-	_ "github.com/glebarez/go-sqlite"
-
-	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
+	_ "modernc.org/sqlite"
 )
 
 const tables = `
@@ -29,17 +28,26 @@ CREATE TABLE product (
 `
 
 func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
-	db, err := sql.Open("sqlite", "file::memory:?cache=shared")
+	fp, err := os.CreateTemp("", "go-dvwa-*")
+	if err != nil {
+		return nil, err
+	}
+
+	defer fp.Close()
+
+	prepareDB, err := sql.Open("sqlite", fp.Name())
 	if err != nil {
 		log.Fatalln("unexpected sql.Open error:", err)
 	}
 
-	if _, err := db.Exec(tables); err != nil {
+	defer prepareDB.Close()
+
+	if _, err := prepareDB.Exec(tables); err != nil {
 		return nil, err
 	}
 
 	for i := 0; i < nbEntries; i++ {
-		_, err := db.Exec(
+		_, err := prepareDB.Exec(
 			"INSERT INTO user (name, email, password) VALUES (?, ?, ?)",
 			fmt.Sprintf("User#%d", i),
 			fmt.Sprintf("user%d@mail.com", i),
@@ -48,7 +56,7 @@ func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 			return nil, err
 		}
 
-		_, err = db.Exec(
+		_, err = prepareDB.Exec(
 			"INSERT INTO product (name, category, price) VALUES (?, ?, ?)",
 			fmt.Sprintf("Product %d", i),
 			"sneaker",
@@ -58,12 +66,10 @@ func PrepareSQLDB(nbEntries int) (*sql.DB, error) {
 		}
 	}
 
-	db.Close()
-
 	// Reopen the database to enable tracing
-	db, err = sqltrace.Open("sqlite", "file::memory:?cache=shared")
+	db, err := sql.Open("sqlite", fp.Name())
 	if err != nil {
-		log.Fatalln("unexpected sqltrace.Open error:", err)
+		log.Fatalln("unexpected rerunning sql.Open error:", err)
 	}
 
 	return db, nil
@@ -81,8 +87,8 @@ type (
 	}
 )
 
-func GetProducts(ctx context.Context, db *sql.DB, category string) ([]Product, error) {
-	rows, err := db.QueryContext(ctx, "SELECT * FROM product WHERE category='"+category+"'")
+func GetProducts(_ context.Context, db *sql.DB, category string) ([]Product, error) {
+	rows, err := db.Query("SELECT * FROM product WHERE category='" + category + "'")
 	if err != nil {
 		return nil, err
 	}

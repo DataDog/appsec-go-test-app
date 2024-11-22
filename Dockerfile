@@ -1,9 +1,10 @@
 ARG buildenv="base"
-ARG golang="1.21"
+ARG golang="1.22"
 
 FROM golang:$golang AS base-build-env
 
-RUN apt update && apt install -y jq
+RUN curl -sSfL https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64 -o /usr/local/bin/jq && \
+    chmod +x /usr/local/bin/jq
 
 WORKDIR /app
 COPY . .
@@ -42,7 +43,28 @@ RUN go mod vendor
 # $buildenv defaults to base and allows to be changed into vendoring to test
 # this alternative
 FROM $buildenv-build-env AS build
-RUN go build -v -tags appsec .
+
+ENV DD_ORCHESTRION_IS_GOMOD_VERSION=true
+
+ARG orchestrion=""
+
+RUN set -eux && \
+    if [ -z "$orchestrion" ]; then \
+       go mod edit -json | jq -r '.Require[] | select(.Path == "github.com/DataDog/orchestrion") | .Version' | xargs -i go install github.com/DataDog/orchestrion@{} ; \
+    else if ! go install github.com/DataDog/orchestrion@$orchestrion; then \
+      COMMIT=""; \
+      while [ -z "$COMMIT" ]; do \
+        COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/orchestrion/commits?sha=$orchestrion" | jq -r .[0].sha); \
+        sleep 1; \
+      done; \
+      go install github.com/DataDog/orchestrion@$orchestrion; \
+      fi; \
+    fi; \
+    orchestrion pin
+
+#ENV GOFLAGS='"-toolexec=orchestrion toolexec"'
+
+RUN orchestrion go build -v -tags appsec .
 
 # debian target
 FROM debian:11-slim AS debian
