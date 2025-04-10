@@ -10,7 +10,7 @@ import (
 
 	_ "github.com/glebarez/go-sqlite"
 
-	sqltrace "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
+	sqltrace "github.com/DataDog/dd-trace-go/contrib/database/sql/v2"
 )
 
 const tables = `
