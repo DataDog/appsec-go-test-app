@@ -99,7 +99,7 @@ func GetProducts(ctx context.Context, db *sql.DB, category string) ([]Product, e
 }
 
 func GetUser(ctx context.Context, db *sql.DB, username string) (*User, error) {
-	rows, err := db.QueryContext(ctx, "SELECT name, email, password FROM user WHERE name='"+username+"'")
+	rows, err := db.QueryContext(ctx, "SELECT name, email, password FROM user WHERE name=?", username)
 	if err != nil {
 		return nil, err
 	}
