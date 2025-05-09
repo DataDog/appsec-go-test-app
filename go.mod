@@ -95,3 +95,5 @@ require (
 	modernc.org/memory v1.8.2 // indirect
 	modernc.org/sqlite v1.35.0 // indirect
 )
+
+replace github.com/ebitengine/purego => github.com/ebitengine/purego v0.8.3-0.20250507171810-1638563e3615
