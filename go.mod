@@ -3,11 +3,11 @@ module go-dvwa
 go 1.23.0
 
 require (
-	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.0.0-rc.11
-	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.0.0-rc.11
-	github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2 v2.0.0-rc.11
-	github.com/DataDog/dd-trace-go/contrib/net/http/v2 v2.0.0-rc.11
-	github.com/DataDog/dd-trace-go/v2 v2.0.0-rc.11
+	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.0.0
+	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.0.0
+	github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2 v2.0.0
+	github.com/DataDog/dd-trace-go/contrib/net/http/v2 v2.0.0
+	github.com/DataDog/dd-trace-go/v2 v2.0.0
 	github.com/glebarez/go-sqlite v1.22.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
@@ -17,7 +17,7 @@ require (
 )
 
 require (
-	github.com/DataDog/appsec-internal-go v1.10.0 // indirect
+	github.com/DataDog/appsec-internal-go v1.11.2 // indirect
 	github.com/DataDog/datadog-agent/comp/core/tagger/origindetection v0.64.0-rc.1 // indirect
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.64.0-rc.1 // indirect
 	github.com/DataDog/datadog-agent/pkg/proto v0.64.0-rc.1 // indirect
@@ -34,6 +34,7 @@ require (
 	github.com/DataDog/gostackparse v0.7.0 // indirect
 	github.com/DataDog/opentelemetry-mapping-go/pkg/otlp/attributes v0.26.0 // indirect
 	github.com/DataDog/sketches-go v1.4.7 // indirect
+	github.com/Masterminds/semver/v3 v3.3.1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575 // indirect
