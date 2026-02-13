@@ -1,6 +1,6 @@
 module go-dvwa
 
-go 1.23.0
+go 1.25.7
 
 require (
 	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.0.0
