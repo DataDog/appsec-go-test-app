@@ -2,6 +2,8 @@ module go-dvwa
 
 go 1.24.0
 
+toolchain go1.26.0
+
 require (
 	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.0.0
 	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.0.0
