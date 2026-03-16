@@ -41,11 +41,11 @@ jobs:
         include: ${{ fromJson(needs.matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
           repository: DataDog/appsec-go-test-app
-      - uses: docker/setup-buildx-action@v2
-      - uses: docker/build-push-action@v4
+      - uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55 # v2
+      - uses: docker/build-push-action@0a97817b6ade9f46837855d676c4cca3a2471fc9 # v4
         with:
           context: .
           push: false
