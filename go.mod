@@ -1,18 +1,18 @@
 module go-dvwa
 
-go 1.24.0
+go 1.25.0
 
 require (
-	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.6.0
-	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.6.0
-	github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2 v2.6.0
-	github.com/DataDog/dd-trace-go/contrib/net/http/v2 v2.6.0
-	github.com/DataDog/dd-trace-go/v2 v2.6.0
+	github.com/DataDog/dd-trace-go/contrib/database/sql/v2 v2.6.1
+	github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2 v2.6.1
+	github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2 v2.6.1
+	github.com/DataDog/dd-trace-go/contrib/net/http/v2 v2.6.1
+	github.com/DataDog/dd-trace-go/v2 v2.6.1
 	github.com/glebarez/go-sqlite v1.22.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/stretchr/testify v1.11.1
-	google.golang.org/grpc v1.79.1
+	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 )
 
@@ -83,11 +83,11 @@ require (
 	go.opentelemetry.io/collector/pdata v1.46.0 // indirect
 	go.opentelemetry.io/collector/pdata/pprofile v0.140.0 // indirect
 	go.opentelemetry.io/contrib/bridges/otelzap v0.12.0 // indirect
-	go.opentelemetry.io/otel v1.39.0 // indirect
+	go.opentelemetry.io/otel v1.43.0 // indirect
 	go.opentelemetry.io/otel/log v0.13.0 // indirect
-	go.opentelemetry.io/otel/metric v1.39.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.39.0 // indirect
-	go.opentelemetry.io/otel/trace v1.39.0 // indirect
+	go.opentelemetry.io/otel/metric v1.43.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.43.0 // indirect
+	go.opentelemetry.io/otel/trace v1.43.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
@@ -95,7 +95,7 @@ require (
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
 	golang.org/x/mod v0.30.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.32.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
@@ -108,4 +108,4 @@ require (
 	modernc.org/sqlite v1.35.0 // indirect
 )
 
-replace github.com/ebitengine/purego => github.com/ebitengine/purego v0.8.3-0.20250507171810-1638563e3615
+replace github.com/ebitengine/purego => github.com/ebitengine/purego v0.8.4
