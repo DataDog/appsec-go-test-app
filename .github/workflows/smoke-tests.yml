@@ -59,5 +59,10 @@ jobs:
       - name: Test
         run: |
           docker run -p7777:7777 --rm go-dvwa &
-          sleep 1
-          curl -v --retry 3 --fail 127.0.0.1:7777/
+          # The docker userland proxy accepts connections on the host port before the
+          # app inside the container binds its socket, so curl can connect and then get
+          # RST (exit 56) while the app is still starting. --retry alone doesn't cover
+          # that, so wait for readiness with retries that accept every error kind.
+          curl -v --fail \
+            --retry 30 --retry-delay 1 --retry-all-errors --max-time 5 \
+            127.0.0.1:7777/
