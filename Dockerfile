@@ -18,11 +18,22 @@ RUN set -eux && \
       go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
       go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
       if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
+        # The unauthenticated GitHub API allows 60 requests/hour, so a rate
+        # limit (or a persistent API error) would otherwise leave COMMIT empty
+        # forever and hang the build indefinitely. Bound the poll to 60
+        # attempts (2s apart) and fail fast instead.
         COMMIT=""; \
-        while [ -z "$COMMIT" ]; do \
-          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
-          sleep 1; \
+        ATTEMPTS=0; \
+        MAX_ATTEMPTS=60; \
+        while [ -z "$COMMIT" ] && [ "$ATTEMPTS" -lt "$MAX_ATTEMPTS" ]; do \
+          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha'); \
+          ATTEMPTS=$((ATTEMPTS + 1)); \
+          if [ -z "$COMMIT" ]; then sleep 2; fi; \
         done; \
+        if [ -z "$COMMIT" ]; then \
+          echo "ERROR: could not resolve branch tip for ref '$tracer' via https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer after $MAX_ATTEMPTS attempts; giving up." >&2; \
+          exit 1; \
+        fi; \
         go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
         go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
         go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
