@@ -6,6 +6,8 @@
 #
 FROM golang AS build
 
+RUN apt-get update && apt-get install -y --only-upgrade ca-certificates && update-ca-certificates -f
+
 WORKDIR /app
 COPY . .
 
@@ -26,6 +28,8 @@ RUN ldd go-dvwa | tr -s '[:blank:]' '\n' | grep '^/' | \
 # dependencies.
 #
 FROM gcr.io/distroless/base-debian12:nonroot
+# Use the patched system trust bundle from the build stage.
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 # Copy the program file from the build stage along with the shared libraries
 # it requires.
 COPY --from=build /app/libs /app/go-dvwa /
