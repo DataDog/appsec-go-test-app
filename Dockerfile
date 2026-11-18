@@ -26,7 +26,7 @@ RUN set -eux && \
         ATTEMPTS=0; \
         MAX_ATTEMPTS=60; \
         while [ -z "$COMMIT" ] && [ "$ATTEMPTS" -lt "$MAX_ATTEMPTS" ]; do \
-          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha'); \
+          COMMIT=$(curl --fail-with-body -s --connect-timeout 10 --max-time 30 "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha // empty' 2>/dev/null) || COMMIT=""; \
           ATTEMPTS=$((ATTEMPTS + 1)); \
           if [ -z "$COMMIT" ]; then sleep 2; fi; \
         done; \
