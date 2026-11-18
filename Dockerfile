@@ -21,12 +21,14 @@ RUN set -eux && \
         # The unauthenticated GitHub API allows 60 requests/hour, so a rate
         # limit (or a persistent API error) would otherwise leave COMMIT empty
         # forever and hang the build indefinitely. Bound the poll to 60
-        # attempts (2s apart) and fail fast instead.
+        # attempts (2s apart) and fail fast instead. Each request is capped at
+        # 10s (--max-time), so the loop takes about 2 minutes when GitHub answers
+        # quickly and at most about 12 minutes (60 x (10s + 2s)) if every request stalls.
         COMMIT=""; \
         ATTEMPTS=0; \
         MAX_ATTEMPTS=60; \
         while [ -z "$COMMIT" ] && [ "$ATTEMPTS" -lt "$MAX_ATTEMPTS" ]; do \
-          COMMIT=$(curl --fail-with-body -s --connect-timeout 10 --max-time 30 "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha // empty' 2>/dev/null) || COMMIT=""; \
+          COMMIT=$(curl --fail-with-body -s --connect-timeout 5 --max-time 10 "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha // empty' 2>/dev/null) || COMMIT=""; \
           ATTEMPTS=$((ATTEMPTS + 1)); \
           if [ -z "$COMMIT" ]; then sleep 2; fi; \
         done; \
