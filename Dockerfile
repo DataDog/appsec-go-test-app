@@ -17,7 +17,7 @@ RUN set -eux && \
       go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
       go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
       go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
-      if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
+      if ! go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
         # The unauthenticated GitHub API allows 60 requests/hour, so a rate
         # limit (or a persistent API error) would otherwise leave COMMIT empty
         # forever and hang the build indefinitely. Bound the poll to 60
