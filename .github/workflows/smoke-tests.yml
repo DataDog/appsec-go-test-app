@@ -16,6 +16,12 @@ on:
         description: "dd-trace-go version to go get. Empty uses the go.mod one"
 
 jobs:
+  dockerfile-run-block:
+    name: Dockerfile RUN block harness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+      - run: ./test/dockerfile-run-block.sh
   matrix:
     name: Test matrix
     runs-on: ubuntu-latest
