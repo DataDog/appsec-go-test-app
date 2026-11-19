@@ -13,16 +13,34 @@ ARG tracer=""
 # If the first go get fails, we wait for github to register the commit (or stop rate limiting us)
 RUN set -eux && \
     if [ "$tracer" != "" ]; then \
-      go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
-      go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
-      go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \
-      go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer}; \
-      if !go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
+      # The leading `go get`s are allowed to fail (typically because the Go
+      # module proxy has not caught up with a just-pushed ref yet): under
+      # `set -e` an unguarded failure would abort the RUN before the fallback
+      # below can run. The re-check of the v2 module decides whether the
+      # fallback executes.
+      go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer} || :; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer} || :; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer} || :; \
+      go get -v -u github.com/DataDog/dd-trace-go/contrib/gorilla/mux/v2@${tracer} || :; \
+      if ! go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; then \
+        # The unauthenticated GitHub API allows 60 requests/hour, so a rate
+        # limit (or a persistent API error) would otherwise leave COMMIT empty
+        # forever and hang the build indefinitely. Bound the poll to 60
+        # attempts (2s apart) and fail fast instead. Each request is capped at
+        # 10s (--max-time), so the loop takes about 2 minutes when GitHub answers
+        # quickly and at most about 12 minutes (60 x (10s + 2s)) if every request stalls.
         COMMIT=""; \
-        while [ -z "$COMMIT" ]; do \
-          COMMIT=$(curl --fail-with-body -s "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r .[0].sha); \
-          sleep 1; \
+        ATTEMPTS=0; \
+        MAX_ATTEMPTS=60; \
+        while [ -z "$COMMIT" ] && [ "$ATTEMPTS" -lt "$MAX_ATTEMPTS" ]; do \
+          COMMIT=$(curl --fail-with-body -s --connect-timeout 5 --max-time 10 "https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer" | jq -r '.[0].sha // empty' 2>/dev/null) || COMMIT=""; \
+          ATTEMPTS=$((ATTEMPTS + 1)); \
+          if [ -z "$COMMIT" ]; then sleep 2; fi; \
         done; \
+        if [ -z "$COMMIT" ]; then \
+          echo "ERROR: could not resolve branch tip for ref '$tracer' via https://api.github.com/repos/DataDog/dd-trace-go/commits?sha=$tracer after $MAX_ATTEMPTS attempts; giving up." >&2; \
+          exit 1; \
+        fi; \
         go get -v -u github.com/DataDog/dd-trace-go/v2@${tracer}; \
         go get -v -u github.com/DataDog/dd-trace-go/contrib/database/sql/v2@${tracer}; \
         go get -v -u github.com/DataDog/dd-trace-go/contrib/google.golang.org/grpc/v2@${tracer}; \

@@ -13,6 +13,9 @@ clean:
 test:
 	$(GO) test ./...
 
+test-dockerfile:
+	./test/dockerfile-run-block.sh
+
 image:
 	$(DOCKER) build -t go-$(APP) .
 
@@ -20,4 +23,4 @@ run: image
 	@$(DOCKER) run -it -e APPSEC_ENABLED=1 -e DD_API_KEY="$(cat api_key.txt)" -p 8080:8080 go-$(APP)
 
 
-.PHONY: all clean test image run
+.PHONY: all clean test test-dockerfile image run
